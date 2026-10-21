@@ -1,0 +1,97 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{notacion}[2026/10/19 Cuaderno de notas del doctorado]
+
+% ---------- Paquetes ----------
+\RequirePackage[T1]{fontenc}
+\RequirePackage[spanish,es-noshorthands]{babel}
+\RequirePackage{amsmath,amssymb,amsthm}
+\RequirePackage{environ}
+\RequirePackage{xcolor}
+\RequirePackage[a4paper,margin=1.8cm]{geometry}
+
+% ---------- TU NOTACIÓN (añade aquí tus macros) ----------
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Pot}{\mathcal{P}}
+
+% ---------- Tipos de nota ----------
+% \definirtipo{entorno}{Título que se imprime}
+% Para crear un tipo nuevo basta una línea.
+\makeatletter
+
+\newcommand{\definirtipo}[2]{%
+  \newtheorem*{#1@t}{#2}%
+  \NewEnviron{#1}[2][]{%
+    \@ifundefined{nota@cuerpo@##2}{}{%
+      \PackageWarning{notacion}{Clave repetida: ##2}}%
+    \global\expandafter\let\csname nota@cuerpo@##2\endcsname\BODY
+    \global\expandafter\def\csname nota@tipo@##2\endcsname{#1@t}%
+    \global\expandafter\def\csname nota@nombre@##2\endcsname{##1}%
+    \@mostrarnota{##2}}}
+
+% Imprime una nota ya guardada (sin comprobar que existe)
+\newcommand{\@mostrarnota}[1]{%
+  \begingroup
+  \expandafter\ifx\csname nota@nombre@#1\endcsname\@empty
+    \csname\csname nota@tipo@#1\endcsname\endcsname
+  \else
+    \csname\csname nota@tipo@#1\endcsname\endcsname[\csname nota@nombre@#1\endcsname]%
+  \fi
+  \csname nota@cuerpo@#1\endcsname
+  \csname end\csname nota@tipo@#1\endcsname\endcsname
+  \endgroup}
+
+\theoremstyle{plain}
+\definirtipo{teorema}{Teorema}
+\definirtipo{proposicion}{Proposición}
+\definirtipo{lema}{Lema}
+\definirtipo{corolario}{Corolario}
+\definirtipo{conjetura}{Conjetura}
+\theoremstyle{definition}
+\definirtipo{definicion}{Definición}
+\definirtipo{concepto}{Concepto}
+\definirtipo{idea}{Idea}
+\definirtipo{pregunta}{Pregunta}
+
+% ---------- Cargar, leer y recordar ----------
+\newcommand{\@archivoactual}{}
+
+% \cargar{fichero}: lee el fichero en silencio (no imprime nada)
+\newcommand{\cargar}[1]{%
+  \edef\@archivoactual{\detokenize{#1}}%
+  \setbox\z@\vbox{\hbadness=10000 \vbadness=10000 \input{#1}}%
+  \setbox\z@\box\voidb@x}
+
+% \leer{fichero}: lee el fichero y lo imprime entero (con demostraciones)
+\newcommand{\leer}[1]{%
+  \edef\@archivoactual{\detokenize{#1}}%
+  \input{#1}}
+
+% \recordar{clave}: imprime el enunciado de una nota
+\newcommand{\recordar}[1]{%
+  \@ifundefined{nota@cuerpo@#1}{%
+    \par\noindent\textbf{\textcolor{red}{[No existe la nota «#1»]}}\par}{%
+    \@mostrarnota{#1}}}
+
+% ---------- Pendientes ----------
+\let\@listapend\@empty
+
+% \pendiente{texto}: marca un pendiente (se recoge en \pendientes)
+\newcommand{\pendiente}[1]{%
+  \xdef\@listapend{\unexpanded\expandafter{\@listapend}%
+    \noexpand\item \unexpanded{#1} \noexpand\textit{(\@archivoactual)}}%
+  \textbf{\textcolor{red}{[Pendiente: #1]}}}
+
+% \pendientes: imprime la lista de todos los pendientes cargados
+\newcommand{\pendientes}{%
+  \ifx\@listapend\@empty
+    \textit{No hay pendientes.}%
+  \else
+    \begin{itemize}\@listapend\end{itemize}%
+  \fi}
+
+% ---------- Diario ----------
+% \dia{2026-10-19}: abre una entrada del diario
+\newcommand{\dia}[1]{\par\bigskip\noindent\textbf{#1}\par\nopagebreak}
+
+\makeatother
+\endinput

@@ -1,0 +1,12 @@
+# Ficheros que genera LaTeX (cada PC compila los suyos)
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.pdf
+build/

@@ -1,0 +1,22 @@
+\documentclass[11pt]{article}
+\usepackage{notacion}
+\begin{document}
+
+% ===== 1. CARGAR (en silencio): todos los ficheros que quieras poder usar =====
+\cargar{notas/ejemplo}
+\cargar{diario}
+
+% ===== 2. VER: las notas que quieres tener delante hoy =====
+\section*{Hoy}
+\recordar{op-cierre}
+\recordar{cierre-union}
+
+% ===== 3. PENDIENTES (de todos los ficheros cargados) =====
+\section*{Pendientes}
+\pendientes
+
+% ===== 4. BIBLIOGRAFÍA: descomenta estas dos líneas cuando cites algo =====
+% \bibliographystyle{plain}
+% \bibliography{refs}
+
+\end{document}
