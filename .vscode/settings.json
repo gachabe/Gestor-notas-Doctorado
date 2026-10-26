@@ -1,5 +1,16 @@
 {
   "latex-workshop.latex.autoBuild.run": "onSave",
   "latex-workshop.view.pdf.viewer": "tab",
-  "latex-workshop.latex.rootFile.doNotPrompt": true
+  "latex-workshop.latex.rootFile.doNotPrompt": true,
+  "files.exclude": {
+    "**/*.aux": true,
+    "**/*.log": true,
+    "**/*.fls": true,
+    "**/*.fdb_latexmk": true,
+    "**/*.out": true,
+    "**/*.toc": true,
+    "**/*.synctex.gz": true,
+    "**/*.bbl": true,
+    "**/*.blg": true
+  }
 }
