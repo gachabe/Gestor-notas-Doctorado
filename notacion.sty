@@ -18,6 +18,9 @@
 % Para crear un tipo nuevo basta una línea.
 \makeatletter
 
+% Marca que el paquete está cargado desde vista.tex (lo usan los ficheros de notas)
+\newcommand{\notaenvista}{}
+
 \newcommand{\definirtipo}[2]{%
   \newtheorem*{#1@t}{#2}%
   \NewEnviron{#1}[2][]{%

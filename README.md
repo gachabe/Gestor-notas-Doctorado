@@ -23,21 +23,79 @@ notas-doctorado/
 
 La idea: cada nota se **escribe una vez** y se **recuerda** donde haga falta. Si la corriges, se corrige en todas partes.
 
-## 2. Instalación (una vez por PC)
+## 2. Instalar y usar LaTeX en VS Code (una vez por PC)
 
-1. **Una distribución de TeX**
-   - Windows: MiKTeX o TeX Live. Si la compilación falla por `latexmk`, hace falta Perl (MiKTeX no lo trae).
-   - macOS: MacTeX.
-   - Linux (Debian/Ubuntu):
-     ```
-     sudo apt install texlive-full latexmk
-     ```
-2. **VS Code**, y dentro la extensión **LaTeX Workshop** (autor: James Yu). Se instala desde la pestaña de extensiones (`Ctrl+Shift+X`).
-3. **Git**, y una cuenta de GitHub.
+Repite esto en cada PC (casa y despacho).
 
-Para trabajar: `Archivo > Abrir carpeta` y abre la carpeta del proyecto.
-Abre cualquier `.tex`, y al **guardar** (`Ctrl+S`) se compila `vista.tex` automáticamente, aunque estés en otro fichero (lo indica la primera línea `% !TEX root = ...` de cada uno).
-El PDF se abre en una pestaña con `Ctrl+Alt+V`. Arrastra esa pestaña a la derecha para tenerla al lado del editor.
+### 2.1 Instalar TeX (el compilador)
+
+**Windows**: instala **TeX Live** (trae Perl, que `latexmk` necesita). Descarga `install-tl-windows.exe` desde https://tug.org/texlive/windows.html y ejecútalo con la instalación completa (ocupa varios GB y tarda). Alternativa: MiKTeX (https://miktex.org), pero entonces tienes que instalar Perl aparte (por ejemplo Strawberry Perl).
+
+**macOS**: instala MacTeX desde https://tug.org/mactex/ o con Homebrew:
+
+```
+brew install --cask mactex-no-gui
+```
+
+**Linux (Debian/Ubuntu)**:
+
+```
+sudo apt install texlive-full latexmk
+```
+
+Cuando termine, **cierra y vuelve a abrir** la terminal (o reinicia el PC) y comprueba que existen estos comandos:
+
+```
+latexmk -v
+pdflatex --version
+```
+
+Si dice que no los reconoce, TeX no está en el PATH: reinicia, y en Windows comprueba que la carpeta `bin` de TeX Live está en el PATH (el instalador lo hace solo).
+
+Si instalaste una versión reducida (BasicTeX, MiKTeX) y falla por un paquete que falta, instálalo con:
+
+```
+sudo tlmgr install babel-spanish environ
+```
+
+### 2.2 Instalar VS Code y la extensión
+
+1. Descarga VS Code: https://code.visualstudio.com
+2. Abre VS Code, pulsa `Ctrl+Shift+X` (extensiones), busca **LaTeX Workshop** (autor: James Yu) y pulsa *Install*. O desde la terminal:
+
+```
+code --install-extension James-Yu.latex-workshop
+```
+
+### 2.3 Primer uso
+
+1. `Archivo > Abrir carpeta` y elige la carpeta del proyecto (`notas-doctorado`).
+2. Abre `vista.tex`.
+3. Guarda con `Ctrl+S`. Se compila solo (la primera vez tarda más). Abajo, en la barra de estado, verás que está compilando.
+4. Abre el PDF con `Ctrl+Alt+V`. Se abre en una pestaña: arrástrala a la derecha para tenerla al lado del código.
+5. Prueba: abre `notas/ejemplo.tex`, cambia una palabra y guarda. Se compila esa nota sola y su PDF se abre con `Ctrl+Alt+V` (apartado 4.1).
+
+Para compilar a mano: `Ctrl+Alt+B`.
+
+### 2.4 Escribir LaTeX en VS Code
+
+- **Autocompletado**: al escribir `\` salen sugerencias de comandos (`Ctrl+Espacio` las abre). Los entornos propios de este proyecto (`lema`, `idea`...) puede que no los sugiera; escríbelos a mano.
+- **Errores**: panel *Problems* (`Ctrl+Shift+M`). Indica fichero y línea. El log completo está en `Ver > Salida`, eligiendo «LaTeX Compiler» en el desplegable.
+- **Saltar entre código y PDF**: `Ctrl+clic` en el PDF te lleva a esa línea del código; `Ctrl+Alt+J` te lleva del código al PDF.
+- **Terminal integrada**: `Ctrl+ñ` (o `Ctrl+\``) para ejecutar los comandos de git sin salir de VS Code.
+
+### 2.5 Git
+
+1. Instala Git: https://git-scm.com
+2. Crea una cuenta en GitHub si no la tienes.
+3. Los comandos están en el apartado 10. También puedes usar el panel *Source Control* de VS Code (`Ctrl+Shift+G`).
+
+### 2.6 Si falla la compilación
+
+- **No compila y no hay PDF**: comprueba `latexmk -v` en la terminal. Si no existe, TeX no está instalado o no está en el PATH; reinicia VS Code o el PC.
+- **Error que menciona Perl** (Windows): instala Perl (TeX Live ya lo trae).
+- **Falta un paquete**: instálalo con `tlmgr` (ver 2.1).
+- **Cualquier otro error**: mira el panel *Problems* y el log del apartado 2.4.
 
 ## 3. Rutina de una sesión
 
@@ -83,14 +141,30 @@ Los resultados de otros se escriben igual, con `\cite{...}` dentro (apartado 8).
 **Fichero de notas nuevo** (por ejemplo `notas/fca.tex`):
 
 1. Créalo en `notas/`.
-2. Pon como primera línea:
+2. Pon estas líneas **al principio** (cambia `fca` por el nombre del fichero):
    ```latex
-   % !TEX root = ../vista.tex
+   % !TEX root = fca.tex
+   \ifdefined\notaenvista\else\documentclass[11pt]{article}\usepackage{../notacion}\begin{document}\def\notasola{}\fi
    ```
-3. En `vista.tex`, añade en la sección 1:
+3. Y esta línea **al final**:
+   ```latex
+   \ifdefined\notasola\end{document}\fi
+   ```
+4. En `vista.tex`, añade en la sección 1:
    ```latex
    \cargar{notas/fca}
    ```
+
+Lo más fácil es copiar `notas/ejemplo.tex`, cambiar el nombre y borrar su contenido dejando esas líneas.
+
+### 4.1 PDF de una nota por separado
+
+Con las líneas anteriores, cada fichero de `notas/` se compila **solo**: abre `notas/fca.tex`, guarda (`Ctrl+S`) y pulsa `Ctrl+Alt+V`. Sale un PDF con todo el fichero, demostraciones incluidas, que se guarda como `notas/fca.pdf` (no se sube a git).
+
+Dos cosas:
+
+- Al compilar una nota sola, un `\recordar` de una nota que está en otro fichero no funciona. Para eso está `vista.tex`.
+- Si prefieres que al guardar una nota se compile `vista` en vez de la nota, cambia la primera línea del fichero por `% !TEX root = ../vista.tex`.
 
 Hay un `notas/ejemplo.tex` con una definición, un lema con demostración y una idea. Bórralo cuando tengas los tuyos (y quita su `\cargar` y los `\recordar` de ejemplo en `vista.tex`).
 

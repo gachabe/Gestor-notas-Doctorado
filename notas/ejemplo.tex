@@ -1,26 +1,28 @@
-% !TEX root = ../vista.tex
+% !TEX root = ejemplo.tex
 % EJEMPLO: borra este fichero cuando crees los tuyos (fca.tex, dl.tex...).
-
+\ifdefined\notaenvista\else\documentclass[11pt]{article}\usepackage{../notacion}\begin{document}\def\notasola{}\fi
 \begin{definicion}[Operador de cierre]{op-cierre}
-    Un \emph{operador de cierre} sobre un conjunto $X$ es una aplicación
-    $c\colon \Pot(X)\to\Pot(X)$ que es extensiva ($A\subseteq c(A)$),
-    monótona ($A\subseteq B \Rightarrow c(A)\subseteq c(B)$) e
-    idempotente ($c(c(A))=c(A)$).
+Un \emph{operador de cierre} sobre un conjunto $X$ es una aplicación
+$c\colon \Pot(X)\to\Pot(X)$ que es extensiva ($A\subseteq c(A)$),
+monótona ($A\subseteq B \Rightarrow c(A)\subseteq c(B)$) e
+idempotente ($c(c(A))=c(A)$).
 \end{definicion}
 
 \begin{lema}[Cierre de una unión]{cierre-union}
-    Si $c$ es un operador de cierre, entonces
-    $c(A\cup B)=c\bigl(c(A)\cup c(B)\bigr)$.
+Si $c$ es un operador de cierre, entonces
+$c(A\cup B)=c\bigl(c(A)\cup c(B)\bigr)$.
 \end{lema}
 \begin{proof}
-    ($\subseteq$) Como $A\cup B\subseteq c(A)\cup c(B)$ por extensividad,
-    la monotonía da la inclusión.
-    ($\supseteq$) Por monotonía $c(A)\cup c(B)\subseteq c(A\cup B)$, y aplicando
-    de nuevo monotonía e idempotencia,
-    $c\bigl(c(A)\cup c(B)\bigr)\subseteq c(c(A\cup B))=c(A\cup B)$.
+($\subseteq$) Como $A\cup B\subseteq c(A)\cup c(B)$ por extensividad,
+la monotonía da la inclusión.
+($\supseteq$) Por monotonía $c(A)\cup c(B)\subseteq c(A\cup B)$, y aplicando
+de nuevo monotonía e idempotencia,
+$c\bigl(c(A)\cup c(B)\bigr)\subseteq c(c(A\cup B))=c(A\cup B)$.
 \end{proof}
 
 \begin{idea}{idea-generalizar}
-    Ver si el lema anterior se generaliza a uniones arbitrariasdfgfdg de familias.
-    \pendiente{comprobar el caso de la familia infinita}
+Ver si el lema anterior se generaliza a uniones arbitrarias de familias.
+\pendiente{comprobar el caso de la familia infinita}
 \end{idea}
+
+\ifdefined\notasola\end{document}\fi
